@@ -1,10 +1,15 @@
+# import uuid
+# import os
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
+from django.core.exceptions import PermissionDenied
 from django.db import models
+from django.utils.text import slugify
 
 
 class IforumUserManager(UserManager):
@@ -35,7 +40,7 @@ class IforumUserManager(UserManager):
 
 
 class User(AbstractUser):
-    username = None
+    username = models.CharField(max_length=255, blank=True)
     email = models.EmailField(
         _("email address"),
         unique=True,
@@ -51,26 +56,33 @@ class User(AbstractUser):
 
 
 class Tag(models.Model):
-  value = models.SlugField(max_length=100)
+    value = models.CharField(max_length=100)
 
-  def __str__(self):
-    return self.value
+    def create(self, *args, **kwargs):
+        if not self.request.user.is_authorized:
+            raise PermissionDenied(
+                "You do not have permission to create objects.")
+        return super().create(*args, **kwargs)
+
+    def __str__(self):
+        return self.value
 
 
-# class Gallery(models.Model):
-#     image = models.ImageField(upload_to='gallery/%Y/%m/%d',
-#                               blank=True)
-#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-#     object_id = models.PositiveIntegerField(db_index=True)
-#     content_object = GenericForeignKey("content_type", "object_id")
-#     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+class Gallery(models.Model):
+    post = models.ForeignKey(
+        'Post', on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(
+        upload_to='gallery/%Y/%m/%d')  # upload_to=galler_image_path
+    created_at = models.DateTimeField(
+        auto_now_add=True, db_index=True)
 
 
 class Comment(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE)
     content = models.TextField()
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE, related_name='comments')
     object_id = models.PositiveIntegerField(db_index=True)
     content_object = GenericForeignKey("content_type", "object_id")
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -81,22 +93,30 @@ class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(blank=True, null=True)
     title = models.TextField(max_length=100)
-    slug = models.SlugField()
     content = models.TextField()
-    tags = models.ManyToManyField(Tag, related_name='posts')
+    slug = models.SlugField()
+    views = models.SmallIntegerField(default=0)
+    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
     comments = GenericRelation(Comment)
-    # gallery = GenericRelation(Gallery)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title + '_' + f'{self.pk}')
+        super(Post, self).save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return self.title
 
 
 class AuthorProfile(models.Model):
-  user = models.OneToOneField(
-      settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
-  )
-  bio = models.TextField()
-#   pic = GenericRelation(Gallery)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="profile",
+        )
+    bio = models.TextField()
+    #   pic = GenericRelation(Gallery)
 
-  def __str__(self):
-      return f"{self.__class__.__name__} object for {self.user}"
+    def __str__(self):
+        return f"{self.__class__.__name__} object for {self.user}"
