@@ -1,30 +1,16 @@
 {% extends "base.html" %}
+{% load post_extras %}
+
+
 {% block content %}
     <h2>Index Template</h2>
 
-    <div class="alert alert-success" role="alert">
-        A simple success alert—check it out!
-    </div>
-    <div class="alert alert-danger" role="alert">
-        A simple danger alert—check it out!
-    </div>
-    <div class="alert alert-warning" role="alert">
-        A simple warning alert—check it out!
-    </div>
+    {% for post in posts %}
+        <h2> {{ post.title }}</h2>
+        <small>By {{post.author|author_details:request.user }} on {{post.published_at|date:"M, d Y"}}</small>
+        <p> {{post.content }}</p>
 
-    <button type="button" class="btn btn-primary">Primary</button>
-    <a href="#" class="btn btn-secondary">Secondary</a>
-    <button type="button" class="btn btn-danger">Danger</button>
-    <hr>
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle"
-        id="dropdownMenuButton1" type="button" data-bs- toggle="dropdown" aria-expanded="false">
-              BootStrap Dropdown
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><a class="dropdown-item" href="#">Item 1</a></li>
-        <li><a class="dropdown-item" href="#">Item 2</a></li>
-        <li><a class="dropdown-item" href="#">Item 3</a></li>
-        </ul> </div>
+
+    {% endfor %}
 
 {% endblock %}

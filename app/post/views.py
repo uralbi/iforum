@@ -21,7 +21,8 @@ from drf_spectacular.utils import (
 )
 
 def index(request):
-    return render(request, "post/index.html")
+    posts = Post.objects.filter(published_at__isnull = False).order_by('-published_at')
+    return render(request, "post/index.html", {'posts': posts})
 
 @extend_schema_view(
     list=extend_schema(
