@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load post_extras %}
+{% block content %}
+
+<div class="card m-4 p-2">
+
+<div class="card-title">
+        <h2>{{ post.title }}</h2>
+</div>
+
+<div class="row">
+    <div class="col">
+
+    {% include "post/post-byline.html" %}
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        Content:   {{ post.content }}
+    </div>
+
+</div>
+<div class="row">
+    <div class="col">
+        Created date: {{ post.created_at }}
+    </div>
+</div>
+
+</div>
+<div class="card m-4 p-2">
+{% recent_posts post %}
+</div>
+
+{% endblock %}

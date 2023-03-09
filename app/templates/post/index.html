@@ -1,16 +1,40 @@
 {% extends "base.html" %}
 {% load post_extras %}
 
-
 {% block content %}
     <h2>Index Template</h2>
+    <h2>  POSTS  </h2>
 
     {% for post in posts %}
-        <h2> {{ post.title }}</h2>
-        <small>By {{post.author|author_details:request.user }} on {{post.published_at|date:"M, d Y"}}</small>
-        <p> {{post.content }}</p>
+
+    {% row 'border-bottom' %}
+        <div class="card m-2 p-2">
+            <div class="card-header">
+            <h2> {{ post.title }}</h2>
+            </div>
+            <div class="card-body">
+                {% for gallery in post.images.all %}
+                <img class='img-thumbnail width-10 float' src="{{ gallery.image.url }}"
+                alt="Gallery image"
+                style="height:50px; width:auto;">
+            {% endfor %}
+            </div>
+            {% if post.tags.all %}
+                <div>
+                TAGS:
+                {% for tag in post.tags.all%}
+                <button type="button" class="btn btn-sm btn-outline-primary">{{tag}}</button>
+                {% endfor %}
+                </div>
+             {% endif %}
+
+            {% include "post/post-byline.html" %}
+            <a href="{% url "post:post-detail" post.id %}">Read More</a>
+
+        </div>
 
 
+    {% endrow %}
     {% endfor %}
 
 {% endblock %}
