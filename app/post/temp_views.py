@@ -34,6 +34,4 @@ def index(request):
     posts = Post.objects.filter(published_at__isnull = False).order_by(
         '-published_at').prefetch_related(
         'images').prefetch_related('tags').all()
-
-    content_type_id = ContentType.objects.get_for_model(posts.first()).id
-    return render(request, "post/index.html", {'posts': posts, 'content_type_id': content_type_id})
+    return render(request, "post/index.html", {'posts': posts})

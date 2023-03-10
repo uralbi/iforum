@@ -28,11 +28,13 @@ from drf_spectacular.utils import (
 <class 'core.models.Gallery'> 13
 """
 
-my_models = {}
-for ctype in ContentType.objects.all():
-    if ctype.app_label == 'core':
-        my_models[ctype.model] = ctype.id
-
+if ContentType.objects.all().exists():
+    my_models = {}
+    for ctype in ContentType.objects.all():
+        if ctype.app_label == 'core':
+            my_models[ctype.model] = ctype.id
+else:
+    my_models = {'1': 1}
 
 @extend_schema_view(
     list=extend_schema(
@@ -40,6 +42,7 @@ for ctype in ContentType.objects.all():
             OpenApiParameter(
                 'content_type',
                 OpenApiTypes.INT, enum=[i for i in my_models.values()],
+                # OpenApiTypes.INT,
                 description='Content type id',
             ),
             OpenApiParameter(

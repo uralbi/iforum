@@ -17,13 +17,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-PASSWORD_HASHERS = [
-        'django.contrib.auth.hashers.Argon2PasswordHasher',
-        'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-        'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
-        'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
-]
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -41,7 +34,6 @@ INSTALLED_APPS = [
     'user',
     'post',
     'comment',
-
 ]
 
 MIDDLEWARE = [
@@ -163,11 +155,6 @@ LOGGING = {
                     "stream":"ext://sys.stdout",
                     "formatter": "verbose",
                     },
-        "file": {
-            'level': 'DEBUG',
-             "class": "logging.FileHandler",
-             "filename": "debug.log",
-                 },
         },
     "root": {
             "handlers": ["console"],
