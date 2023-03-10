@@ -17,8 +17,14 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
+PASSWORD_HASHERS = [
+        'django.contrib.auth.hashers.Argon2PasswordHasher',
+        'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+        'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+        'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -142,3 +148,29 @@ SPECTACULAR_SETTINGS = {
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {message} {asctime} {module} {process:d} {thread:d} ",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {"class": "logging.StreamHandler",
+                    "stream":"ext://sys.stdout",
+                    "formatter": "verbose",
+                    },
+        "file": {
+            'level': 'DEBUG',
+             "class": "logging.FileHandler",
+             "filename": "debug.log",
+                 },
+        },
+    "root": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        }
+    }
