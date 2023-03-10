@@ -13,6 +13,9 @@ from rest_framework import status
 from core.models import Post, Comment, Tag, Gallery
 from comment import srzs
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 from drf_spectacular.utils import (
     extend_schema_view,
@@ -28,21 +31,23 @@ from drf_spectacular.utils import (
 <class 'core.models.Gallery'> 13
 """
 
-if ContentType.objects.all().exists():
-    my_models = {}
-    for ctype in ContentType.objects.all():
-        if ctype.app_label == 'core':
-            my_models[ctype.model] = ctype.id
-else:
-    my_models = {'1': 1}
+# try:
+#     ContentType.objects.all().exists()
+#     my_models = {}
+#     for ctype in ContentType.objects.all():
+#         if ctype.app_label == 'core':
+#             my_models[ctype.model] = ctype.id
+# except Exception as e:
+#     logger.debug('Except block : %s', e)
+#     my_models = {'1': 1}
 
 @extend_schema_view(
     list=extend_schema(
         parameters=[
             OpenApiParameter(
                 'content_type',
-                OpenApiTypes.INT, enum=[i for i in my_models.values()],
-                # OpenApiTypes.INT,
+                # OpenApiTypes.INT, enum=[i for i in my_models.values()],
+                OpenApiTypes.INT,
                 description='Content type id',
             ),
             OpenApiParameter(
