@@ -1,5 +1,3 @@
-from django.shortcuts import render, get_object_or_404
-
 from django.db.models import Q
 from rest_framework import viewsets, generics
 from rest_framework.authentication import TokenAuthentication
@@ -19,16 +17,6 @@ from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
 )
-
-
-def post_detail(request, pk):
-    post = get_object_or_404(Post, id=pk)
-    return render(request, "post/post-detail.html", {"post": post})
-
-
-def index(request):
-    posts = Post.objects.filter(published_at__isnull = False).order_by('-published_at').prefetch_related('images').prefetch_related('tags').all()
-    return render(request, "post/index.html", {'posts': posts})
 
 
 @extend_schema_view(

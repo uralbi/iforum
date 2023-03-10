@@ -14,7 +14,7 @@
             </div>
             <div class="card-body">
                 {% for gallery in post.images.all %}
-                <img class='img-thumbnail width-10 float' src="{{ gallery.image.url }}"
+                <img class='img-thumbnail' src="{{ gallery.image.url }}"
                 alt="Gallery image"
                 style="height:50px; width:auto;">
             {% endfor %}
@@ -30,9 +30,7 @@
 
             {% include "post/post-byline.html" %}
             <a href="{% url "post:post-detail" post.id %}">Read More</a>
-
         </div>
-
 
     {% endrow %}
     {% endfor %}

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from post import views
+from post import temp_views as views
 
 
 app_name = 'post'

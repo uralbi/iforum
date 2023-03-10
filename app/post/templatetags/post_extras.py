@@ -2,6 +2,7 @@ from django import template
 from django.contrib.auth import get_user_model
 from django.utils.html import format_html as fhtml
 from core.models import Post
+from django.contrib.contenttypes.models import ContentType
 
 register = template.Library()
 user_model = get_user_model()
@@ -10,6 +11,7 @@ user_model = get_user_model()
 @register.inclusion_tag("post/post-list.html")
 def recent_posts(post):
     posts = Post.objects.exclude(pk=post.pk)[:5]
+    # content_id = ContentType.objects.get_for_model(posts.first()).id
     return {"title": "Recent Posts", "posts": posts}
 
 
@@ -24,8 +26,8 @@ def author_details(author, current_user):
     else:
         name = f"{author.username}"
     if author.email:
-        email = author.email
-        prefix = fhtml('<a href="mailto:{}">', author.email)
+        # prefix = fhtml('<a href="mailto:{}">', author.email)
+        prefix = fhtml('<a href="#">', author.email)
         suffix = fhtml("</a>")
     else:
         prefix = ""
@@ -65,7 +67,8 @@ def author_details_tag(context):
     else:
         name = f"{author.username}"
     if author.email:
-        prefix = fhtml('<a href="mailto:{}">', author.email)
+        # prefix = fhtml('<a href="mailto:{}">', author.email)
+        prefix = fhtml('<a href="#">', author.email)
         suffix = fhtml("</a>")
     else:
         prefix = ""
