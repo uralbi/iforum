@@ -9,7 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 def post_detail(request, pk):
-    post = Post.objects.prefetch_related('images', 'tags').get(pk=pk)
+    post = Post.objects.select_related(
+        "author").prefetch_related(
+        'images', 'tags').get(pk=pk)
     logger.debug('God %d post', post.id)
     if request.user.is_active:
         if request.method == "POST":
@@ -31,7 +33,11 @@ def post_detail(request, pk):
 
 
 def index(request):
+    # filter(published_at__lte=timezone.now()
     posts = Post.objects.filter(published_at__isnull = False).order_by(
         '-published_at').prefetch_related(
-        'images').prefetch_related('tags').all()
+        'images').prefetch_related(
+        'tags').select_related(
+        "author").defer(
+        "created_at")
     return render(request, "post/index.html", {'posts': posts})

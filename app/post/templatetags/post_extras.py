@@ -10,7 +10,9 @@ user_model = get_user_model()
 
 @register.inclusion_tag("post/post-list.html")
 def recent_posts(post):
-    posts = Post.objects.exclude(pk=post.pk)[:5]
+    posts = Post.objects.exclude(
+        pk=post.pk)[:5].select_related(
+        "author")
     # content_id = ContentType.objects.get_for_model(posts.first()).id
     return {"title": "Recent Posts", "posts": posts}
 

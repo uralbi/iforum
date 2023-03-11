@@ -18,12 +18,12 @@ urlpatterns = [
         name='api-docs',),
     path('api/user/', include('user.api_urls')),
     path('api/comment/', include('comment.api_urls')),
-    path('api/', include('post.api_urls')),
-
-]
+    path('api/', include('post.api_urls')),]
 
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT,
-    )
+        document_root=settings.MEDIA_ROOT,)
+    import debug_toolbar
+    urlpatterns += [
+        path("__debug__/", include(debug_toolbar.urls)),]
