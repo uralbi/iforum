@@ -3,7 +3,7 @@
 
 
 {% block content %}
-    <h2>Index Template</h2>
+
     <h2>  POSTS  </h2>
 
     {% for post in posts %}
@@ -30,7 +30,7 @@
              {% endif %}
 
             {% include "post/post-byline.html" %}
-            <a href="{% url "post:post-detail" post.id %}">Read More</a>
+            <a href="{% url "tpost:post-detail" post.id %}">Read More</a>
         </div>
 
     {% endrow %}

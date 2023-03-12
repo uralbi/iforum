@@ -2,7 +2,7 @@
 
 <ul>
 {% for post in posts %}
-    <li> <a href="{% url "post:post-detail" post.id %}">
+    <li> <a href="{% url "tpost:post-detail" post.id %}">
         {{ post.title|truncatechars:20}}
         </a>
     </li>

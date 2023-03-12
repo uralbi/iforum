@@ -73,7 +73,7 @@ class PublicPostAPITests(TestCase):
             'testpass123',
             )
         post = create_post(user=other_user)
-        payload = {"published_at": "2023-02-02T11:11:11Z"}
+        payload = {"published_at": "2023-02-02T03:11:11-08:00"}
         res = self.client.post(publish_url(post.id), payload)
         self.assertIsNotNone(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -131,7 +131,7 @@ class PrivatePostApiTests(TestCase):
     def test_publish_post(self):
         """ Test update post published_at with API """
         post = create_post(user=self.user)
-        payload = {"published_at": "2023-02-02T11:11:11Z"}
+        payload = {"published_at": "2023-02-02T03:11:11-08:00"}
         res = self.client.post(publish_url(post.id), payload)
         self.assertEqual(res.data['published_at'], payload['published_at'])
 

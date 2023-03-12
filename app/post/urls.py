@@ -4,7 +4,7 @@ from django.conf import settings
 import logging
 logger = logging.getLogger(__name__)
 
-app_name = 'post'
+app_name = 'tpost'
 
 urlpatterns = [
     path('', views.index, name='home page'),

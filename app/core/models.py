@@ -117,8 +117,9 @@ class AuthorProfile(models.Model):
         on_delete=models.CASCADE,
         related_name="profile",
         )
+    image = models.ImageField(
+        upload_to='profile_images/%Y/%m/%d', blank=True)
     bio = models.TextField()
-    #   pic = GenericRelation(Gallery)
 
     def __str__(self):
         return f"{self.__class__.__name__} object for {self.user}"

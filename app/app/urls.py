@@ -10,7 +10,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('posts/', include('post.urls')),
+    path('', include('post.urls')),
+    path("user/", include("user.urls")),
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path(
         'api/docs/',

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.contenttypes.models import ContentType
-from post.forms import CommentForm
+from comment.forms import CommentForm
 from core.models import Post, Tag, Gallery
 import logging
 
